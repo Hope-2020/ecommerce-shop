@@ -8,11 +8,14 @@ const ProductContext = React.createContext();
 
 class ProductProvider extends Component {
     state = {
-        products : [],
-        detailProduct:detailProduct,
-        cart:[],
+        products: [],
+        detailProduct: detailProduct,
+        cart: [],
         modalOpen: false,
-        modalProduct:detailProduct,
+        modalProduct: detailProduct,
+        cartSubTotal: 0,
+        cartTax: 0,
+        cartTotal: 0
     };
 
     componentDidMount() {
@@ -24,11 +27,11 @@ class ProductProvider extends Component {
         storeProducts.forEach(item => {
             const singleItem = { ...item };
             tempProducts = [ ...tempProducts, singleItem ];
-        })
+        });
         this.setState(() => {
-            return { products : tempProducts }
-        })
-    }
+            return { products : tempProducts };
+        });
+    };
 
     getItem = id => {
         const product = this.state.products.find(item => item.id === id);
@@ -38,11 +41,11 @@ class ProductProvider extends Component {
     handleDetail = id => {
         const product = this.getItem(id);
         this.setState(()=>{
-            return {detailProduct:product}
-        })
+            return { detailProduct: product };
+        });
     };
 
-    addToCart = (id) => {
+    addToCart = id => {
         let tempProducts = [...this.state.products];
         const index = tempProducts.indexOf(this.getItem(id));
         const product = tempProducts[index];
@@ -87,6 +90,22 @@ class ProductProvider extends Component {
         })
      }
 
+     increment = (id) => {
+         console.log('this is increment method');
+     }
+
+     decrement = (id) => {
+        console.log('this is decrement method');
+    }
+
+    removeItem = (id) => {
+        console.log('Item removed');
+    }
+
+    clearCart = () =>{
+        console.log('cart was cleared');
+    }
+
     render() {
         return (
             <ProductContext.Provider 
@@ -95,7 +114,11 @@ class ProductProvider extends Component {
                     addToCart: this.addToCart,
                     ...this.state,
                     openModal: this.openModal,
-                    closeModal: this.closeModal
+                    closeModal: this.closeModal,
+                    increment: this.increment,
+                    decrement: this.decrement,
+                    removeItem: this.removeItem,
+                    clearCart: this.clearCart
                 }}
             >
               { this.props.children }  
